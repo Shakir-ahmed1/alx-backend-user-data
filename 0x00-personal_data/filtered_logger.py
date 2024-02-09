@@ -50,7 +50,3 @@ def get_logger() -> logging.Logger:
     new_log.addHandler(a_handler)
 
     return new_log
-
-
-print(get_logger.__annotations__.get('return'))
-print("PII_FIELDS: {}".format(len(PII_FIELDS)))
