@@ -32,3 +32,25 @@ class RedactingFormatter(logging.Formatter):
         record.msg = filter_datum(self.fields, self.REDACTION,
                                   record.getMessage(), self.SEPARATOR)
         return super().format(record)
+
+
+# user_data = open('user_data.csv')
+# reader = csv.reader(user_data)
+# user_data.close()
+
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
+
+
+def get_logger() -> logging.Logger:
+    new_log = logging.Logger()
+    new_log.setLevel(logging.INFO)
+    a_handler = logging.StreamHandler()
+    a_formatter = RedactingFormatter(PII_FIELDS)
+    a_handler.formatter(a_formatter)
+    new_log.addHandler(a_handler)
+
+    return new_log
+
+
+print(get_logger.__annotations__.get('return'))
+print("PII_FIELDS: {}".format(len(PII_FIELDS)))
