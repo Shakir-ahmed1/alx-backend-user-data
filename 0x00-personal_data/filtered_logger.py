@@ -66,3 +66,18 @@ def get_db() -> connection.MySQLConnection:
         password=pdb_password,
         database=pdb_name)
     return connection
+
+
+db = get_db()
+cursor = db.cursor()
+cursor.execute("SELECT * FROM users;")
+a = get_logger()
+
+for row in cursor:
+    message = f"name={row[0]}; email={row[1]}; phone={row[2]}; " +\
+              f"ssn={row[3]}; password={row[4]};ip={row[5]}; " +\
+              f"last_login={row[6]}; user_agent={row[7]};"
+    a.info(message)
+
+cursor.close()
+db.close()
