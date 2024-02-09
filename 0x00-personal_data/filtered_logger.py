@@ -42,11 +42,15 @@ PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
 def get_logger() -> logging.Logger:
-    new_log = logging.Logger()
+    """ returns a logger"""
+    new_log = logging.getLogger()
+    new_log.propagate = False
     new_log.setLevel(logging.INFO)
     a_handler = logging.StreamHandler()
     a_formatter = RedactingFormatter(PII_FIELDS)
-    a_handler.formatter(a_formatter)
+    a_handler.setFormatter(a_formatter)
     new_log.addHandler(a_handler)
 
     return new_log
+print(get_logger.__annotations__.get('return'))
+print("PII_FIELDS: {}".format(len(PII_FIELDS)))
