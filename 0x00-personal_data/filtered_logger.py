@@ -4,7 +4,9 @@ from typing import List
 import logging
 import re
 from mysql.connector import connect, connection
-from os import getenv
+from os import environ
+
+getenv = environ.get
 
 
 def filter_datum(fields: List[str], redaction: str,
