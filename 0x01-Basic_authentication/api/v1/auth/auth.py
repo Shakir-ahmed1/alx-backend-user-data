@@ -5,7 +5,9 @@ from typing import TypeVar
 
 
 class Auth:
+    """ authenitcation class"""
     def __init__(self) -> None:
+        """ intializations """
         pass
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
