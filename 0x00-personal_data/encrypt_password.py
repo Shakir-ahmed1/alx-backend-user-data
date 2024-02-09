@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+""" password encrypting """
 import bcrypt
 
 
