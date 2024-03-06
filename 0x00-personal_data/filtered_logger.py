@@ -1,83 +1,85 @@
 #!/usr/bin/env python3
-""" Regex-ing entries """
-from typing import List
+"""
+logging system for Personal data varification
+"""
 import logging
+import os
 import re
-from mysql.connector import connect, connection
-from os import environ
+from typing import List
+import mysql.connector
 
-getenv = environ.get
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
-def filter_datum(fields: List[str], redaction: str,
-                 message: str, separator: str) -> str:
-    """ returns the log message obfuscated """
-    for field in fields:
-        message = re.sub(f'{field}=[^{separator}]*', f'{field}={redaction}',
-                         message, count=0)
+def filter_datum(fields: List[str], redaction: str, message: str,
+                 separator: str) -> str:
+    """ Replacing """
+    for f in fields:
+        message = re.sub(rf"{f}=(.*?)\{separator}",
+                         f'{f}={redaction}{separator}', message)
     return message
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-        """
+    """ RedactingFormatter class. """
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
     def __init__(self, fields: List[str]):
-        """ initialization """
-        super(RedactingFormatter, self).__init__(self.FORMAT)
+        """ Init """
         self.fields = fields
+        super(RedactingFormatter, self).__init__(self.FORMAT)
 
     def format(self, record: logging.LogRecord) -> str:
-        """ format the log """
-        record.msg = filter_datum(self.fields, self.REDACTION,
-                                  record.getMessage(), self.SEPARATOR)
-        return super().format(record)
-
-
-PII_FIELDS: List[str] = ('name', 'email', 'phone', 'ssn', 'password')
+        """ Format """
+        return filter_datum(self.fields, self.REDACTION,
+                            super().format(record), self.SEPARATOR)
 
 
 def get_logger() -> logging.Logger:
-    """ returns a logger"""
-    new_log = logging.getLogger()
-    new_log.propagate = False
-    new_log.setLevel(logging.INFO)
-    a_handler = logging.StreamHandler()
-    a_formatter = RedactingFormatter(PII_FIELDS)
-    a_handler.setFormatter(a_formatter)
-    new_log.addHandler(a_handler)
+    """ Implementing a logger.
+    """
 
-    return new_log
-
-
-def get_db() -> connection.MySQLConnection:
-    """ returns a connector to a database using env variables"""
-    pdb_username = getenv('PERSONAL_DATA_DB_USERNAME', 'root')
-    pdb_password = getenv('PERSONAL_DATA_DB_PASSWORD', '')
-    pdb_host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
-    pdb_name = getenv('PERSONAL_DATA_DB_NAME')
-    connection = connect(
-        host=pdb_host,
-        user=pdb_username,
-        password=pdb_password,
-        database=pdb_name)
-    return connection
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+    handler = logging.StreamHandler()
+    handler.setFormatter(RedactingFormatter(PII_FIELDS))
+    logger.addHandler(handler)
+    return logger
 
 
-db = get_db()
-cursor = db.cursor()
-cursor.execute("SELECT * FROM users;")
-a = get_logger()
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """ Implement db conectivity
+    """
+    psw = os.environ.get("PERSONAL_DATA_DB_PASSWORD", "")
+    username = os.environ.get('PERSONAL_DATA_DB_USERNAME', "root")
+    host = os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
+    db_name = os.environ.get('PERSONAL_DATA_DB_NAME')
+    conn = mysql.connector.connect(
+        host=host,
+        database=db_name,
+        user=username,
+        password=psw)
+    return conn
 
-for row in cursor:
-    message = f"name={row[0]}; email={row[1]}; phone={row[2]}; " +\
-              f"ssn={row[3]}; password={row[4]};ip={row[5]}; " +\
-              f"last_login={row[6]}; user_agent={row[7]};"
-    a.info(message)
 
-cursor.close()
-db.close()
+def main() -> None:
+    """ Implement a main function
+    """
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    for row in cursor:
+        message = f"name={row[0]}; email={row[1]}; phone={row[2]}; " +\
+            f"ssn={row[3]}; password={row[4]};ip={row[5]}; " +\
+            f"last_login={row[6]}; user_agent={row[7]};"
+        print(message)
+    cursor.close()
+    db.close()
+
+
+if __name__ == '__main__':
+    main()
