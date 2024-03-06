@@ -56,16 +56,16 @@ def get_logger() -> logging.Logger:
 
 def get_db() -> connection.MySQLConnection:
     """ returns a connector to a database using env variables"""
-    pdb_username = getenv('PERSONAL_DATA_DB_USERNAME', 'root')
-    pdb_password = getenv('PERSONAL_DATA_DB_PASSWORD', '')
-    pdb_host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
-    pdb_name = getenv('PERSONAL_DATA_DB_NAME')
-    connection = connect(
-        host=pdb_host,
-        user=pdb_username,
-        password=pdb_password,
-        database=pdb_name)
-    return connection
+    psw = getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    username = getenv('PERSONAL_DATA_DB_USERNAME', "root")
+    host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    db_name = getenv('PERSONAL_DATA_DB_NAME')
+    conn = connect(
+        host=host,
+        database=db_name,
+        user=username,
+        password=psw)
+    return conn
 
 
 db = get_db()
