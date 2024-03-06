@@ -71,7 +71,7 @@ def main() -> None:
     """
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("DELETE * FROM users;")
+    # cursor.execute("SELECT * FROM users;")
     for row in cursor:
         message = f"name={row[0]}; email={row[1]}; phone={row[2]}; " +\
             f"ssn={row[3]}; password={row[4]};ip={row[5]}; " +\
