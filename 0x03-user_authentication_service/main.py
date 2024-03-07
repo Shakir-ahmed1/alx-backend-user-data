@@ -10,7 +10,7 @@ BASE_URL = "http://0.0.0.0:5000"
 def register_user(email: str, password: str) -> None:
     """ test registering a user """
     url = "{}/users".format(BASE_URL)
-    body = {'email': email,'password': password,}
+    body = {'email': email, 'password': password}
     res = requests.post(url, data=body)
     assert res.json() == {"email": email, "message": "user created"}
     assert res.status_code == 200
@@ -52,7 +52,7 @@ def profile_logged(session_id: str) -> None:
     """ test retrieving profile information whilst logged in.
     """
     url = "{}/profile".format(BASE_URL)
-    req_cookies = { 'session_id': session_id }
+    req_cookies = {'session_id': session_id}
     res = requests.get(url, cookies=req_cookies)
     assert res.status_code == 200
     assert "email" in res.json()
@@ -92,6 +92,7 @@ def reset_password_token(email: str) -> str:
     assert "reset_token" in res.json()
     assert res.json()["email"] == email
     return res.json().get('reset_token')
+
 
 if __name__ == "__main__":
     register_user(EMAIL, PASSWD)
