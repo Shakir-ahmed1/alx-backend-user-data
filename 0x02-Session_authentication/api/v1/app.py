@@ -35,8 +35,7 @@ def before_every_request():
                              ['/api/v1/status/',
                               '/api/v1/unauthorized/',
                               '/api/v1/forbidden/',
-                              '/api/v1/auth_session/login/',
-                              '/'
+                              '/api/v1/auth_session/login/'
                               ]):
         return
 
@@ -47,12 +46,6 @@ def before_every_request():
     if auth.current_user(request) is None:
         abort(403)
     request.current_user = auth.current_user(request)
-
-
-@app.route('/')
-def home():
-    """ home page """
-    return jsonify({})
 
 
 @app.errorhandler(404)
