@@ -41,12 +41,13 @@ def login():
 @app.route('/sessions', methods=["DELETE"])
 def logout():
     """ implements log out """
-    session_id = request.cookies.get('session_id')  # Retrieve session ID from cookie
-    user_id = AUTH.get_user_from_session_id(session_id)  # Find user with session ID
-    if user_id:  # If user exists
-        AUTH.destroy_session(user_id)  # Destroy the session
-        return redirect('/')  # Redirect the user to the home page
-    abort(403) 
+    session_id = request.cookies.get('session_id')
+    user_id = AUTH.get_user_from_session_id(session_id)
+    if user_id:
+        AUTH.destroy_session(user_id.id)
+        return redirect('/')
+    else:
+        abort(403)
 
 
 if __name__ == "__main__":
