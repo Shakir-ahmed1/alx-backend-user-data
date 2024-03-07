@@ -66,4 +66,3 @@ class BasicAuth(Auth):
             return search_result[0]
         except KeyError:
             return None
-
