@@ -66,3 +66,12 @@ class BasicAuth(Auth):
             return search_result[0]
         except KeyError:
             return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """ get current user """
+        auth_header = self.authorization_header(request)
+        b64 = self.extract_base64_authorization_header(auth_header)
+        decode64 = self.decode_base64_authorization_header(b64)
+        email, password = self.extract_user_credentials(decode64)
+        user = self.user_object_from_credentials(email, password)
+        return user
