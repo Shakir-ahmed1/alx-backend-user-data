@@ -2,7 +2,7 @@
 """ Module of Users views
 """
 from api.v1.views import app_views
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from models.user import User
 import os
 
@@ -30,3 +30,15 @@ def session_login() -> str:
         ret = jsonify(user.to_json())
         ret.set_cookie(os.getenv('SESSION_NAME'), session_id)
         return ret
+
+
+@app_views.route('/auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
+def delete_session() -> str:
+    """ DELETE /api/v1/auth_session/logout
+    """
+    from api.v1.app import auth
+    result = auth.destroy_session(request)
+    if not result:
+        abort(404)
+    return jsonify({})
