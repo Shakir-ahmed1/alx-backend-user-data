@@ -60,8 +60,8 @@ def profile():
     abort(403)
 
 
-@app.route('/get_reset_password_token', methods=['GET'])
-def reset_token():
+@app.route('/get_reset', methods=['GET'])
+def get_reset_password_token():
     """ get reset token """
     email = request.form.get('email')
     try:
