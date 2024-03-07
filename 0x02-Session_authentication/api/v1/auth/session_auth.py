@@ -45,4 +45,4 @@ class SessionAuth(Auth):
         if User.get(user_id):
             return True
         else:
-            return True
+            return False
