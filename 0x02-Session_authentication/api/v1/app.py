@@ -48,6 +48,12 @@ def before_every_request():
     request.current_user = auth.current_user(request)
 
 
+@app.route('/')
+def home():
+    """ home page """
+    return jsonify({})
+
+
 @app.errorhandler(404)
 def not_found(error) -> str:
     """ Not found handler
