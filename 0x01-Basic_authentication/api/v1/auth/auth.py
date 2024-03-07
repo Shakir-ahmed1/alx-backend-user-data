@@ -15,6 +15,9 @@ class Auth:
         if not path or not excluded_paths:
             return True
         sh = path.rstrip('/') + '/'
+        for ep in excluded_paths:
+            if path.startswith(ep.rstrip('*')):
+                return False
         if sh in excluded_paths or path.rstrip('/') in excluded_paths:
             return False
         else:
