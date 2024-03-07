@@ -45,3 +45,13 @@ class DB:
         if filter.first() is None:
             raise NoResultFound
         return filter.first()
+
+    def update_user(self, user_id, **kwargs):
+        """ update a user"""
+        user = self._session.query(User).filter_by(id=user_id).one()
+        for attr, value in kwargs.items():
+            if hasattr(user, attr):
+                setattr(user, attr, value)
+            else:
+                raise ValueError
+        self._session.commit()
