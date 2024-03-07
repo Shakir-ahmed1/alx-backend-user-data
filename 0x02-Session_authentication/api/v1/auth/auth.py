@@ -4,6 +4,7 @@ from flask import request
 from typing import TypeVar, List
 import os
 
+
 class Auth:
     """ authenitcation class"""
     def __init__(self) -> None:
