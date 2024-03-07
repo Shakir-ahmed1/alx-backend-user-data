@@ -46,7 +46,7 @@ class DB:
             raise NoResultFound
         return filter.first()
 
-    def update_user(self, user_id, **kwargs):
+    def update_user(self, user_id: int, **kwargs):
         """ update a user"""
         user = self._session.query(User).filter_by(id=user_id).one()
         for attr, value in kwargs.items():
