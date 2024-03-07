@@ -2,6 +2,7 @@
 """ authrization module """
 from flask import request
 from typing import TypeVar, List
+import os
 
 
 class Auth:
@@ -32,3 +33,10 @@ class Auth:
     def current_user(self, request=None) -> TypeVar('User'):
         """ checks the user """
         return None
+
+    def session_cookie(self, request=None):
+        """ gets session from cookie """
+        if request is None:
+            return None
+        cookie_name = os.getenv('SESSION_NAME')
+        return request.cookies.get(cookie_name)
