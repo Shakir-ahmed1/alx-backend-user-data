@@ -4,7 +4,7 @@
 import bcrypt
 from db import DB
 from sqlalchemy.orm.exc import NoResultFound
-
+from user import User
 
 def _hash_password(password: str) -> bytes:
     """ password hasher """
@@ -20,7 +20,7 @@ class Auth:
         """ initialize the class"""
         self._db = DB()
 
-    def register_user(self, email, password):
+    def register_user(self, email: str, password: str) -> User:
         """ registers a new user"""
         try:
             search = self._db.find_user_by(email=email)
