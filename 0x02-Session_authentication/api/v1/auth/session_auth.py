@@ -42,11 +42,6 @@ class SessionAuth(Auth):
             return False
         user_id = self.user_id_for_session_id(session_id)
         self.user_id_by_session_id.pop(session_id)
-        try:
-            user = User.get(user_id)
-            if user:
-                return True
-            else:
-                return False
-        except Exception:
+        if user_id is None:
             return False
+        return False

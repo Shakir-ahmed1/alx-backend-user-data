@@ -41,4 +41,4 @@ def delete_session() -> str:
     result = auth.destroy_session(request)
     if not result:
         abort(404)
-    return jsonify({})
+    return jsonify({}), 200
