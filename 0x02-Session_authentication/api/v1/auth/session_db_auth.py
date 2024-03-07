@@ -20,31 +20,30 @@ class SessionDBAuth(SessionExpAuth):
         user = UserSession(**kw)
         user.save()
         return session_id
-    
+
     def user_id_for_session_id(self, session_id=None):
         """ user id for session id """
-        # search_result = UserSession().search(attributes={"session_id":session_id})
+        # search_result = UserSession().search(
+        # attributes={"session_id":session_id})
         # if not search_result:
         #     return None
         # return search_result[0].user_id
         if session_id is None:
             return None
-        session_info = UserSession().search(attributes={'session_id': session_id})
-        print(session_info)
+        session_info = UserSession().search(
+            attributes={'session_id': session_id})
         if not session_info:
             return None
         session_info = session_info[0]
-        print("rrrrrrrrrrr", session_info.id, session_info.session_id)
         if self.session_duration <= 0:
             return session_info.user_id
         if session_info.created_at is None:
             return None
         expiry = session_info.created_at + timedelta(
             seconds=self.session_duration)
-        print("heeeeeeeeys2", expiry, datetime.utcnow(), session_info.created_at, self.session_duration)
+
         if expiry < datetime.utcnow():
             return None
-        print("heeeeeeeeys")
 
         return session_info.user_id
 
@@ -55,9 +54,9 @@ class SessionDBAuth(SessionExpAuth):
         session_id = self.session_cookie(request)
         if session_id is None:
             return False
-        search_result = UserSession().search(attributes={"session_id":session_id})
+        search_result = UserSession().search(
+            attributes={"session_id": session_id})
         if not search_result:
             return False
         search_result[0].remove()
         return True
-        
